@@ -21,7 +21,18 @@ const PAGE_SIZE = 12;
 const API_KEY = '38758565-30dff5e0c8e04bcbf19e28f96';
 
 const ImageGallery = ({ searchText, page, handleClick }) => {
-
+  // const { handleClick } = props;
+  // const [searchText, setSearchText] = useState('');
+  // const [page, setPage] = useState(0);
+  // const [searchText, setSearchText] = useState(() => {
+  //   const initialState = props.searchText;
+  //   return initialState;
+  // });
+  // const [page, setPage] = useState(() => {
+  //   const initialState = props.page;
+  //   return initialState;
+  // });
+  // const { searchText, page, handleClick } = props;
   const [searchResults, setSearchResults] = useState([]);
   const [currentTotalHits, setCurrentTotalHits] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
@@ -29,7 +40,12 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
   const [showModal, setShowModal] = useState(false);
   const [largePicture, setLargePicture] = useState(null);
 
+  // setSearchText(props.searchText);
+  // setPage(props.page);
+  // useEffect(() => {}, [searchText, page]);
+
   useEffect(() => {
+    // const searchText = this.props.searchText;
     setSearchResults(() => []);
     setCurrentTotalHits(0);
 
