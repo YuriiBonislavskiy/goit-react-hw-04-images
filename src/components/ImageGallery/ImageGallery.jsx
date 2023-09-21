@@ -30,7 +30,7 @@ const ImageGallery = ({ searchText }) => {
   const [showModal, setShowModal] = useState(false);
   const [largePicture, setLargePicture] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => {  // Обнулення результатів при зміні пошукового запиту
     setSearchResults([]);
     setCurrentTotalHits(0);
     setPage(1);
