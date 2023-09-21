@@ -20,7 +20,9 @@ const BASE_URL = 'https://pixabay.com/api/';
 const PAGE_SIZE = 12;
 const API_KEY = '38758565-30dff5e0c8e04bcbf19e28f96';
 
-const ImageGallery = ({ searchText, page, handleClick }) => {
+const ImageGallery = ({ searchText }) => {
+  
+  const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
   const [currentTotalHits, setCurrentTotalHits] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
@@ -29,23 +31,25 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
   const [largePicture, setLargePicture] = useState(null);
 
   useEffect(() => {
-    // const searchText = this.props.searchText;
-    setSearchResults(() => []);
+    setSearchResults([]);
     setCurrentTotalHits(0);
+    setPage(1);
+  }, [searchText]);
 
+  useEffect(() => {
     setStatus(Status.PENDING);
+    const fetchText = searchText;
+    const fetchPage = page;
 
-    API.fetchData(searchText, BASE_URL, page, PAGE_SIZE, API_KEY)
+    API.fetchData(fetchText, BASE_URL, fetchPage, PAGE_SIZE, API_KEY)
       .then(response => {
         const { hits, totalHits } = response;
-
         if (totalHits > 0) {
-          setSearchResults([...hits]);
+          setSearchResults(prevState => page === 1 ? [...hits] : [...prevState, ...hits]);
           setCurrentTotalHits(totalHits);
           setStatus(Status.RESOLVED);
           return;
         }
-
         setError(`Nothing was found for request <${searchText}>`);
         setStatus(Status.REJECTED);
       })
@@ -53,33 +57,15 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
         setError(error);
         setStatus(Status.REJECTED);
       });
-    // eslint-disable-next-line
-  }, [searchText ]); 
 
-  useEffect(() => {
-    if (page > 1) {
-      setStatus(Status.PENDING);
-
-      API.fetchData(searchText, BASE_URL, page, PAGE_SIZE, API_KEY)
-        .then(response => {
-          const { hits } = response;
-          setSearchResults(prevState => [...prevState, ...hits]);
-          setStatus(Status.RESOLVED);
-        })
-        .catch(error => {
-          setError(error);
-          setStatus(Status.REJECTED);
-        });
-    }
-    // eslint-disable-next-line
-  }, [page]);
+  }, [ searchText, page]);
 
   useEffect(() => {
     toScrollPos();
   });
 
   const nextPage = page => {
-    handleClick(page + 1);
+    setPage(prevState => prevState + 1);
   };
 
   const selectedItemView = curentLargePicture => {
@@ -133,8 +119,8 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
 
 ImageGallery.propTypes = {
   searchText: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
+  // handleClick: PropTypes.func.isRequired,
+  // page: PropTypes.number.isRequired,
 };
 
 export default ImageGallery;

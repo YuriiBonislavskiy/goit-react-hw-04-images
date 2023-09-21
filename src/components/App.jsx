@@ -4,16 +4,16 @@ import ImageGallery from './ImageGallery';
 
 const App = () => {
   const [searchText, setSearchText] = useState('');
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
 
   const handleSubmit = text => {
       setSearchText(text);
-      setPage(1);
+      // setPage(1);
   };
 
- const handleClick = (page) => {
-    setPage(page);
-  };
+//  const handleClick = (page) => {
+//     setPage(page);
+//   };
 
 
     return (
@@ -21,8 +21,8 @@ const App = () => {
         <Searchbar searchText={searchText} onHandleSubmit={handleSubmit} />
         {searchText && <ImageGallery
           searchText={searchText}
-          handleClick={handleClick}
-          page={page}
+          // handleClick={handleClick}
+          // page={page}
         />}
       </div>
     );
