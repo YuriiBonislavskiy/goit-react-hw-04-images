@@ -20,52 +20,59 @@ const BASE_URL = 'https://pixabay.com/api/';
 const PAGE_SIZE = 12;
 const API_KEY = '38758565-30dff5e0c8e04bcbf19e28f96';
 
-const ImageGallery = ({ searchText }) => {
-  
-  const [page, setPage] = useState(1);
+const ImageGallery = ({ searchText, page, handleClick }) => {
+  // const [prevsearchText, setPrevsearchText] = useState('');
+  // const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
   const [currentTotalHits, setCurrentTotalHits] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [largePicture, setLargePicture] = useState(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  useEffect(() => {  // Обнулення результатів при зміні пошукового запиту
-    setSearchResults([]);
-    setCurrentTotalHits(0);
-    setPage(1);
-  }, [searchText]);
 
   useEffect(() => {
-    setStatus(Status.PENDING);
     const fetchText = searchText;
     const fetchPage = page;
+
+    if (isFirstLoad) {
+      setSearchResults([]);
+      setCurrentTotalHits(0);
+      setIsFirstLoad(false);
+      return;
+    }
+
+    setStatus(Status.PENDING);
 
     API.fetchData(fetchText, BASE_URL, fetchPage, PAGE_SIZE, API_KEY)
       .then(response => {
         const { hits, totalHits } = response;
         if (totalHits > 0) {
-          setSearchResults(prevState => page === 1 ? [...hits] : [...prevState, ...hits]);
+          page === 1
+            ? setSearchResults([...hits])
+            : setSearchResults(prevState => [...prevState, ...hits]);
           setCurrentTotalHits(totalHits);
           setStatus(Status.RESOLVED);
           return;
         }
+        setSearchResults([]);
         setError(`Nothing was found for request <${searchText}>`);
         setStatus(Status.REJECTED);
       })
       .catch(error => {
+        setSearchResults([]);
         setError(error);
         setStatus(Status.REJECTED);
       });
-
-  }, [ searchText, page]);
+  }, [isFirstLoad, page, searchText]);
 
   useEffect(() => {
     toScrollPos();
-  });
+  }, [searchResults]);
 
   const nextPage = page => {
-    setPage(prevState => prevState + 1);
+    handleClick(page + 1);
   };
 
   const selectedItemView = curentLargePicture => {
