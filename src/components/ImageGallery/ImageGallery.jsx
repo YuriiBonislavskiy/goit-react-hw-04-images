@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import API from 'Services/SearchDataApi';
 import css from './ImageGallery.module.css';
@@ -29,17 +29,18 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [largePicture, setLargePicture] = useState(null);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-
+  const isFirstLoad = useRef(true);
+  
   useEffect(() => {
     const fetchText = searchText;
     const fetchPage = page;
 
-    if (isFirstLoad) {
+    if (isFirstLoad.current) {
       setSearchResults([]);
       setCurrentTotalHits(0);
-      setIsFirstLoad(false);
+      isFirstLoad.current = false;
       return;
     }
 
@@ -65,7 +66,7 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
         setError(error);
         setStatus(Status.REJECTED);
       });
-  }, [isFirstLoad, page, searchText]);
+  }, [ page, searchText]);
 
   useEffect(() => {
     toScrollPos();
