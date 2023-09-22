@@ -21,26 +21,26 @@ const PAGE_SIZE = 12;
 const API_KEY = '38758565-30dff5e0c8e04bcbf19e28f96';
 
 const ImageGallery = ({ searchText, page, handleClick }) => {
-  // const [prevsearchText, setPrevsearchText] = useState('');
-  // const [page, setPage] = useState(1);
+
   const [searchResults, setSearchResults] = useState([]);
   const [currentTotalHits, setCurrentTotalHits] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [largePicture, setLargePicture] = useState(null);
-  // const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const isFirstLoad = useRef(true);
+  // const isFirstLoad = useRef(true);
+
   
   useEffect(() => {
     const fetchText = searchText;
     const fetchPage = page;
 
-    if (isFirstLoad.current) {
+    if (isFirstLoad) {
       setSearchResults([]);
       setCurrentTotalHits(0);
-      isFirstLoad.current = false;
+      setIsFirstLoad(false);
       return;
     }
 
@@ -66,7 +66,7 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
         setError(error);
         setStatus(Status.REJECTED);
       });
-  }, [ page, searchText]);
+  }, [isFirstLoad, page, searchText]);
 
   useEffect(() => {
     toScrollPos();
