@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import API from 'Services/SearchDataApi';
 import css from './ImageGallery.module.css';
