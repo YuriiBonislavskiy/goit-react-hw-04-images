@@ -5,7 +5,6 @@ import css from './ImageGallery.module.css';
 import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button';
 import ErrorFetch from '../ErrorFetch';
-import Modal from '../Modal';
 import Loader from '../Loader';
 
 const Status = {
@@ -26,12 +25,7 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
   const [currentTotalHits, setCurrentTotalHits] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [largePicture, setLargePicture] = useState(null);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-
-  // const isFirstLoad = useRef(true);
-
   
   useEffect(() => {
     const fetchText = searchText;
@@ -76,20 +70,11 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
     handleClick(page + 1);
   };
 
-  const selectedItemView = curentLargePicture => {
-    setLargePicture(curentLargePicture);
-    toggleModal();
-  };
-
   const toScrollPos = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
-  };
-
-  const toggleModal = () => {
-    setShowModal(prevState => !prevState);
   };
 
   const statusСheck = () => {
@@ -106,7 +91,6 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
             webformatURL={webformatURL}
             tags={tags}
             id={id}
-            onSelectedItemView={selectedItemView}
             key={id}
             largeImageURL={largeImageURL}
           />
@@ -117,9 +101,6 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
       {statusСheck() === 'resolved' && (
         <Button page={page} onNextPage={nextPage} />
       )}
-      {showModal && (
-        <Modal largePicture={largePicture} onToggleModal={toggleModal} />
-      )}
       {status === 'rejected' && <ErrorFetch massage={error} />}
     </div>
   );
@@ -127,8 +108,8 @@ const ImageGallery = ({ searchText, page, handleClick }) => {
 
 ImageGallery.propTypes = {
   searchText: PropTypes.string.isRequired,
-  // handleClick: PropTypes.func.isRequired,
-  // page: PropTypes.number.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
 };
 
 export default ImageGallery;

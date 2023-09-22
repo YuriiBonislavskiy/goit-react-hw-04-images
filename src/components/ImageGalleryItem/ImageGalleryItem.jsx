@@ -1,6 +1,7 @@
-// import React, { useState } from 'react';
+import  { useState } from 'react';
 import PropTypes from 'prop-types';
 // import Loader from '../Loader';
+import Modal from '../Modal';
 import css from './ImageGalleryItem.module.css';
 
 // const ImageGalleryItem = ({ webformatURL, tags, id, onSelectedItemView, setLoading, curentTotalResults, index }) => {
@@ -8,12 +9,14 @@ const ImageGalleryItem = ({
   webformatURL,
   tags,
   id,
-  onSelectedItemView,
   largeImageURL,
 }) => {
-  // const [loading, setLoading] = useState(true);
-  // const fuulLoading = index  === curentTotalResults - 1;
-  // console.log(curentTotalResults, '   ', index + 1, '  ', fuulLoading);
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleModal = () => {
+      setShowModal(prevState => !prevState);
+    };
+
   return (
     <li className={css.ImageGalleryItem} key={id}>
       <img
@@ -21,13 +24,12 @@ const ImageGalleryItem = ({
         className={css.ImageGalleryItemImage}
         alt={tags}
         onClick={() => {
-          onSelectedItemView(largeImageURL);
+          toggleModal(largeImageURL);
         }}
-        // onLoad={() => fuulLoading && setLoading()}
       />
-      {/* {loading && !isLoad && (
-        <Loader/>
-      )} */}
+      {showModal && (
+        <Modal largePicture={largeImageURL} onToggleModal={toggleModal} />
+      )}
     </li>
   );
 };
@@ -36,8 +38,6 @@ ImageGalleryItem.propTypes = {
   webformatURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  onSelectedItemView: PropTypes.func.isRequired,
-  // isLoad: PropTypes.bool.isRequired,
 };
 
 export default ImageGalleryItem;
